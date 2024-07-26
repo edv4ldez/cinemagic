@@ -21,7 +21,7 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "user_type", nullable = false) // Ensure this matches your database column name
     private UserType userType;
 
     @Column(name = "registration_date", nullable = false)
