@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS cinemagic;
 CREATE DATABASE CineMagic;
 
 USE CineMagic;
@@ -68,14 +69,15 @@ CREATE TABLE Ratings (
 
 -- Insert initial records into the Users table
 INSERT INTO Users (name, email, password, user_type) VALUES
-('Alice Johnson', 'alice@example.com', 'password123', 'Spectator'),
-('Bob Smith', 'bob@example.com', 'password123', 'Administrator'),
-('Charlie Davis', 'charlie@example.com', 'password123', 'Spectator');
+('Lewis Hamilton', 'lewis@example.com', 'password123', 'Spectator'),
+('Max Verstappen', 'max@example.com', 'password123', 'Spectator'),
+('Checo Perez', 'checo@example.com', 'password123', 'Administrator');
+
 
 -- Insert initial records into the Movies table
 INSERT INTO Movies (title, description, director, duration, release_date, genre) VALUES
-('Inception', 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO.', 'Christopher Nolan', 148, '2010-07-16', 'Sci-Fi'),
-('The Dark Knight', 'When the menace known as The Joker emerges from his mysterious past, he wreaks havoc and chaos on the people of Gotham.', 'Christopher Nolan', 152, '2008-07-18', 'Action');
+('Back to the Future', 'Marty McFly, a 17-year-old high school student, is accidentally sent 30 years into the past in a time-traveling DeLorean invented by his close friend, eccentric scientist Doc Brown.', 'Robert Zemeckis', 116, '1985-07-03', 'Adventure'),
+('Ready Player One', 'When the creator of a virtual reality world called the OASIS dies, he releases a video in which he challenges all OASIS users to find his Easter Egg, which will give the finder his fortune.', 'Steven Spielberg', 140, '2018-03-29', 'Sci-Fi');
 
 -- Insert initial records into the Schedules table
 INSERT INTO Schedules (movie_id, date, time, hall) VALUES
@@ -98,4 +100,4 @@ INSERT INTO Tickets (user_id, schedule_id, seat_id, price) VALUES
 -- Insert initial records into the Ratings table
 INSERT INTO Ratings (user_id, movie_id, rating, comment) VALUES
 (1, 1, 5, 'Amazing movie!'),
-(2, 2, 4, 'Great action scenes.');
+(2, 2, 4, 'Amazing scenes.');
