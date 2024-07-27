@@ -45,7 +45,7 @@ public class RatingService implements RatingServiceI {
     }
 
     @Override
-    public Rating getRatingByUserAndMovie(Long userId, Long movieId) {
+    public List<Rating> getRatingByUserAndMovie(Long userId, Long movieId) {
         return ratingRepository.findByUserIdAndMovieId(userId, movieId);
     }
 
@@ -55,7 +55,7 @@ public class RatingService implements RatingServiceI {
             rating.setId(id);
             return ratingRepository.save(rating);
         }
-        return null; // or throw an exception
+        return null;
     }
 
     @Override

@@ -10,7 +10,7 @@ public interface RatingServiceI {
     List<Rating> getAllRatings();
     List<Rating> getRatingsByUserId(Long userId);
     List<Rating> getRatingsByMovieId(Long movieId);
-    Rating getRatingByUserAndMovie(Long userId, Long movieId);
+    List<Rating> getRatingByUserAndMovie(Long userId, Long movieId);
     Rating updateRating(Long id, Rating rating);
     void deleteRating(Long id);
 }

@@ -3,6 +3,7 @@ package com.metaphorce.cinemagic.controllers;
 import com.metaphorce.cinemagic.entities.Schedule;
 import com.metaphorce.cinemagic.services.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/schedules")
+@RequestMapping("/api/schedules")
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
@@ -23,8 +24,12 @@ public class ScheduleController {
 
     @PostMapping
     public ResponseEntity<Schedule> createSchedule(@RequestBody Schedule schedule) {
+        // Validate and process the input
+        if (schedule.getDate() == null || schedule.getTime() == null) {
+            return ResponseEntity.badRequest().build();
+        }
         Schedule savedSchedule = scheduleService.saveSchedule(schedule);
-        return ResponseEntity.ok(savedSchedule);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedSchedule);
     }
 
     @GetMapping("/{id}")

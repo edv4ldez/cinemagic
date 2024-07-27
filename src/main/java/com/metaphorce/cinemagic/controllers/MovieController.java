@@ -11,20 +11,18 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/movies")
+@RequestMapping("/api/movies")
 public class MovieController {
 
     @Autowired
     private MovieService movieService;
 
-    // Create or Update Movie
     @PostMapping
     public ResponseEntity<Movie> createOrUpdateMovie(@RequestBody Movie movie) {
         Movie savedMovie = movieService.saveMovie(movie);
         return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
     }
 
-    // Retrieve Movie by ID
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Movie>> getMovieById(@PathVariable Long id) {
         Optional<Movie> movie = movieService.getMovieById(id);
@@ -35,14 +33,12 @@ public class MovieController {
         }
     }
 
-    // Retrieve all Movies
     @GetMapping
     public ResponseEntity<List<Movie>> getAllMovies() {
         List<Movie> movies = movieService.getAllMovies();
         return new ResponseEntity<>(movies, HttpStatus.OK);
     }
 
-    // Retrieve Movies by Title
     @GetMapping("/title/{title}")
     public ResponseEntity<List<Movie>> getMoviesByTitle(@PathVariable String title) {
         List<Movie> movies = movieService.getMoviesByTitle(title);
@@ -53,7 +49,6 @@ public class MovieController {
         }
     }
 
-    // Retrieve Movies by Genre
     @GetMapping("/genre/{genre}")
     public ResponseEntity<List<Movie>> getMoviesByGenre(@PathVariable String genre) {
         List<Movie> movies = movieService.getMoviesByGenre(genre);
@@ -64,7 +59,6 @@ public class MovieController {
         }
     }
 
-    // Retrieve Movies by Director
     @GetMapping("/director/{director}")
     public ResponseEntity<List<Movie>> getMoviesByDirector(@PathVariable String director) {
         List<Movie> movies = movieService.getMoviesByDirector(director);
@@ -75,7 +69,6 @@ public class MovieController {
         }
     }
 
-    // Delete Movie by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
         if (movieService.getMovieById(id).isPresent()) {

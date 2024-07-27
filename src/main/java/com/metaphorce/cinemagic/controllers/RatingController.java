@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/ratings")
+@RequestMapping("/api/ratings")
 public class RatingController {
 
     private final RatingService ratingService;
@@ -46,7 +46,7 @@ public class RatingController {
     }
 
     @GetMapping("/user/{userId}/movie/{movieId}")
-    public ResponseEntity<Rating> getRatingByUserAndMovie(@PathVariable Long userId, @PathVariable Long movieId) {
+    public ResponseEntity<List<Rating>> getRatingByUserAndMovie(@PathVariable Long userId, @PathVariable Long movieId) {
         return ResponseEntity.ok(ratingService.getRatingByUserAndMovie(userId, movieId));
     }
 
