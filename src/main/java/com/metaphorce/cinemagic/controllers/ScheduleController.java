@@ -7,64 +7,69 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/schedules")
 public class ScheduleController {
 
-    private final ScheduleService scheduleService;
-
     @Autowired
-    public ScheduleController(ScheduleService scheduleService) {
-        this.scheduleService = scheduleService;
-    }
+    private ScheduleService scheduleService;
 
     @PostMapping
     public ResponseEntity<Schedule> createSchedule(@RequestBody Schedule schedule) {
-        // Validate and process the input
-        if (schedule.getDate() == null || schedule.getTime() == null) {
-            return ResponseEntity.badRequest().build();
-        }
         Schedule savedSchedule = scheduleService.saveSchedule(schedule);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedSchedule);
+        return new ResponseEntity<>(savedSchedule, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Schedule> getScheduleById(@PathVariable Long id) {
-        Optional<Schedule> schedule = scheduleService.getScheduleById(id);
-        return schedule.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Schedule> getScheduleById(@PathVariable("id") Long id) {
+        Schedule schedule = scheduleService.getScheduleById(id);
+        if (schedule != null) {
+            return new ResponseEntity<>(schedule, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping
     public ResponseEntity<List<Schedule>> getAllSchedules() {
         List<Schedule> schedules = scheduleService.getAllSchedules();
-        return ResponseEntity.ok(schedules);
+        return new ResponseEntity<>(schedules, HttpStatus.OK);
     }
 
     @GetMapping("/movie/{movieId}")
-    public ResponseEntity<List<Schedule>> getSchedulesByMovieId(@PathVariable Long movieId) {
+    public ResponseEntity<List<Schedule>> getSchedulesByMovieId(@PathVariable("movieId") Long movieId) {
         List<Schedule> schedules = scheduleService.getSchedulesByMovieId(movieId);
-        return ResponseEntity.ok(schedules);
+        return new ResponseEntity<>(schedules, HttpStatus.OK);
     }
 
     @GetMapping("/date/{date}")
-    public ResponseEntity<List<Schedule>> getSchedulesByDate(@PathVariable Date date) {
+    public ResponseEntity<List<Schedule>> getSchedulesByDate(@PathVariable("date") LocalDate date) {
         List<Schedule> schedules = scheduleService.getSchedulesByDate(date);
-        return ResponseEntity.ok(schedules);
+        return new ResponseEntity<>(schedules, HttpStatus.OK);
     }
 
-    @GetMapping("/hall/{hall}")
-    public ResponseEntity<List<Schedule>> getSchedulesByHall(@PathVariable Integer hall) {
-        List<Schedule> schedules = scheduleService.getSchedulesByHall(hall);
-        return ResponseEntity.ok(schedules);
+    @GetMapping("/hall/{hallId}")
+    public ResponseEntity<List<Schedule>> getSchedulesByHallId(@PathVariable("hallId") Long hallId) {
+        List<Schedule> schedules = scheduleService.getSchedulesByHallId(hallId);
+        return new ResponseEntity<>(schedules, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Schedule> updateSchedule(@PathVariable("id") Long id, @RequestBody Schedule schedule) {
+        Schedule updatedSchedule = scheduleService.updateSchedule(id, schedule);
+        if (updatedSchedule != null) {
+            return new ResponseEntity<>(updatedSchedule, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteScheduleById(@PathVariable Long id) {
-        scheduleService.deleteScheduleById(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteSchedule(@PathVariable("id") Long id) {
+        scheduleService.deleteSchedule(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

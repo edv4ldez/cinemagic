@@ -6,17 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SeatService implements SeatServiceI {
 
-    private final SeatRepository seatRepository;
-
     @Autowired
-    public SeatService(SeatRepository seatRepository) {
-        this.seatRepository = seatRepository;
-    }
+    private SeatRepository seatRepository;
 
     @Override
     public Seat saveSeat(Seat seat) {
@@ -24,27 +19,12 @@ public class SeatService implements SeatServiceI {
     }
 
     @Override
-    public Optional<Seat> getSeatById(Long id) {
-        return seatRepository.findById(id);
+    public List<Seat> getSeatsByHallId(Long hallId) {
+        return seatRepository.findByHallId(hallId);
     }
 
     @Override
-    public List<Seat> getAllSeats() {
-        return seatRepository.findAll();
-    }
-
-    @Override
-    public List<Seat> getSeatsByHall(Integer hall) {
-        return seatRepository.findByHall(hall);
-    }
-
-    @Override
-    public List<Seat> getSeatsByRowAndNumber(String row, Integer number) {
-        return seatRepository.findByRowAndNumber(row, number);
-    }
-
-    @Override
-    public void deleteSeatById(Long id) {
-        seatRepository.deleteById(id);
+    public Seat getSeat(Long hallId, String seatRow, Integer number) {
+        return seatRepository.findByHallIdAndSeatRowAndNumber(hallId, seatRow, number);
     }
 }

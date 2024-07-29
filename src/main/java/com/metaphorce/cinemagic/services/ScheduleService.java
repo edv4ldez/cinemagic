@@ -5,19 +5,15 @@ import com.metaphorce.cinemagic.repositories.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ScheduleService implements ScheduleServiceI {
 
-    private final ScheduleRepository scheduleRepository;
-
     @Autowired
-    public ScheduleService(ScheduleRepository scheduleRepository) {
-        this.scheduleRepository = scheduleRepository;
-    }
+    private ScheduleRepository scheduleRepository;
 
     @Override
     public Schedule saveSchedule(Schedule schedule) {
@@ -25,8 +21,9 @@ public class ScheduleService implements ScheduleServiceI {
     }
 
     @Override
-    public Optional<Schedule> getScheduleById(Long id) {
-        return scheduleRepository.findById(id);
+    public Schedule getScheduleById(Long id) {
+        Optional<Schedule> optionalSchedule = scheduleRepository.findById(id);
+        return optionalSchedule.orElse(null);
     }
 
     @Override
@@ -40,17 +37,26 @@ public class ScheduleService implements ScheduleServiceI {
     }
 
     @Override
-    public List<Schedule> getSchedulesByDate(Date date) {
+    public List<Schedule> getSchedulesByDate(LocalDate date) {
         return scheduleRepository.findByDate(date);
     }
 
     @Override
-    public List<Schedule> getSchedulesByHall(Integer hall) {
-        return scheduleRepository.findByHall(hall);
+    public List<Schedule> getSchedulesByHallId(Long hallId) {
+        return scheduleRepository.findByHallId(hallId);
     }
 
     @Override
-    public void deleteScheduleById(Long id) {
+    public Schedule updateSchedule(Long id, Schedule schedule) {
+        if (scheduleRepository.existsById(id)) {
+            schedule.setId(id);
+            return scheduleRepository.save(schedule);
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteSchedule(Long id) {
         scheduleRepository.deleteById(id);
     }
 }

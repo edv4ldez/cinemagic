@@ -7,9 +7,6 @@ import java.util.Optional;
 
 public interface SeatServiceI {
     Seat saveSeat(Seat seat);
-    Optional<Seat> getSeatById(Long id);
-    List<Seat> getAllSeats();
-    List<Seat> getSeatsByHall(Integer hall);
-    List<Seat> getSeatsByRowAndNumber(String row, Integer number);
-    void deleteSeatById(Long id);
+    List<Seat> getSeatsByHallId(Long hallId);
+    Seat getSeat(Long hallId, String seatRow, Integer number);
 }

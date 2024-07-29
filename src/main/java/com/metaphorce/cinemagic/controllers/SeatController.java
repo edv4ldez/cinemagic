@@ -1,58 +1,43 @@
 package com.metaphorce.cinemagic.controllers;
 
 import com.metaphorce.cinemagic.entities.Seat;
-import com.metaphorce.cinemagic.services.SeatService;
+import com.metaphorce.cinemagic.services.SeatServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/seats")
 public class SeatController {
 
-    private final SeatService seatService;
-
     @Autowired
-    public SeatController(SeatService seatService) {
-        this.seatService = seatService;
-    }
+    private SeatServiceI seatService;
 
     @PostMapping
     public ResponseEntity<Seat> createSeat(@RequestBody Seat seat) {
         Seat savedSeat = seatService.saveSeat(seat);
-        return ResponseEntity.ok(savedSeat);
+        return new ResponseEntity<>(savedSeat, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Seat> getSeatById(@PathVariable Long id) {
-        Optional<Seat> seat = seatService.getSeatById(id);
-        return seat.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/hall/{hallId}")
+    public ResponseEntity<List<Seat>> getSeatsByHallId(@PathVariable Long hallId) {
+        List<Seat> seats = seatService.getSeatsByHallId(hallId);
+        return new ResponseEntity<>(seats, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Seat>> getAllSeats() {
-        List<Seat> seats = seatService.getAllSeats();
-        return ResponseEntity.ok(seats);
-    }
-
-    @GetMapping("/hall/{hall}")
-    public ResponseEntity<List<Seat>> getSeatsByHall(@PathVariable Integer hall) {
-        List<Seat> seats = seatService.getSeatsByHall(hall);
-        return ResponseEntity.ok(seats);
-    }
-
-    @GetMapping("/row/{row}/number/{number}")
-    public ResponseEntity<List<Seat>> getSeatsByRowAndNumber(@PathVariable String row, @PathVariable Integer number) {
-        List<Seat> seats = seatService.getSeatsByRowAndNumber(row, number);
-        return ResponseEntity.ok(seats);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSeatById(@PathVariable Long id) {
-        seatService.deleteSeatById(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/{hallId}/{seatRow}/{number}")
+    public ResponseEntity<Seat> getSeat(
+            @PathVariable Long hallId,
+            @PathVariable String seatRow,
+            @PathVariable Integer number) {
+        Seat seat = seatService.getSeat(hallId, seatRow, number);
+        if (seat != null) {
+            return new ResponseEntity<>(seat, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
