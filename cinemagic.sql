@@ -40,7 +40,7 @@ CREATE TABLE Schedules (
     date DATE,
     time TIME,
     FOREIGN KEY (movie_id) REFERENCES Movies(id),
-    FOREIGN KEY (hall_id) REFERENCES Halls(id),
+    FOREIGN KEY (hall_id) REFERENCES Halls(id) ON DELETE CASCADE,
     UNIQUE (movie_id, hall_id, date, time)  -- Ensure unique schedule for a movie in a hall at a specific date and time
 );
 
@@ -51,7 +51,7 @@ CREATE TABLE Seats (
     seat_row CHAR(1),  -- Seat row (A, B, C, etc.)
     number INT,  -- Seat number
     isReserved BOOLEAN DEFAULT FALSE,  -- Default value set to FALSE
-    FOREIGN KEY (hall_id) REFERENCES Halls(id),
+    FOREIGN KEY (hall_id) REFERENCES Halls(id) ON DELETE CASCADE,
     UNIQUE (hall_id, seat_row, number)  -- Ensure unique seat in a hall
 );
 
@@ -64,7 +64,7 @@ CREATE TABLE Tickets (
     price DECIMAL(10, 2),
     purchase_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(id),
-    FOREIGN KEY (schedule_id) REFERENCES Schedules(id),
+    FOREIGN KEY (schedule_id) REFERENCES Schedules(id) ON DELETE CASCADE,
     FOREIGN KEY (seat_id) REFERENCES Seats(id),
     UNIQUE (user_id, schedule_id, seat_id)  -- Ensure unique seat for a user per schedule
 );
