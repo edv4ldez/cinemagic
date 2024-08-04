@@ -119,3 +119,5 @@ INSERT INTO Tickets (user_id, schedule_id, seat_id, price) VALUES
 INSERT INTO Ratings (user_id, movie_id, rating, comment) VALUES
 (1, 1, 5, 'Amazing movie!'),
 (2, 2, 4, 'Amazing scenes.');
+
+select * from Tickets;
