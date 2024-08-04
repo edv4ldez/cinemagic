@@ -8,7 +8,6 @@ import com.metaphorce.cinemagic.enums.UserType;
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,13 +16,13 @@ public class TicketTest {
     @Test
     public void testTicketConstructorAndGetters() {
         Long id = 1L;
-        User user = new User("Alice", "alice@example.com", "password123", UserType.Spectator, new Timestamp(System.currentTimeMillis()));
+        User user = new User("Alice", "alice@example.com", "password123", UserType.Customer, new Timestamp(System.currentTimeMillis()));
         Schedule schedule = new Schedule();
         Seat seat = new Seat();
         BigDecimal price = new BigDecimal("10.00");
         Timestamp purchaseDate = new Timestamp(System.currentTimeMillis());
 
-        Ticket ticket = new Ticket(id, purchaseDate, price, seat, schedule, Optional.of(user));
+        Ticket ticket = new Ticket(id, purchaseDate, price, seat, schedule, user);
 
         assertEquals(id, ticket.getId());
         assertEquals(user, ticket.getUser());
@@ -38,14 +37,14 @@ public class TicketTest {
         Ticket ticket = new Ticket();
 
         Long newId = 2L;
-        User newUser = new User("Checo", "checo@example.com", "password456", UserType.Administrator, new Timestamp(System.currentTimeMillis()));
+        User newUser = new User("Checo", "checo@example.com", "password456", UserType.Admin, new Timestamp(System.currentTimeMillis()));
         Schedule newSchedule = new Schedule();
         Seat newSeat = new Seat();
         BigDecimal newPrice = new BigDecimal("15.00");
         Timestamp newPurchaseDate = new Timestamp(System.currentTimeMillis());
 
         ticket.setId(newId);
-        ticket.setUser(Optional.of(newUser));
+        ticket.setUser(newUser);
         ticket.setSchedule(newSchedule);
         ticket.setSeat(newSeat);
         ticket.setPrice(newPrice);
