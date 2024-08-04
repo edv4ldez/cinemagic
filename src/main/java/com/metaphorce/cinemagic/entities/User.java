@@ -2,11 +2,18 @@ package com.metaphorce.cinemagic.entities;
 
 import com.metaphorce.cinemagic.enums.UserType;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity
 @Table(name = "Users")
-public class User {
+public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,15 +28,17 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_type", nullable = false) // Ensure this matches your database column name
+    @Column(name = "user_type", nullable = false)
     private UserType userType;
 
     @Column(name = "registration_date", nullable = false)
     private Timestamp registrationDate;
 
+    // Default constructor
     public User() {
     }
 
+    // Parameterized constructor
     public User(String name, String email, String password, UserType userType, Timestamp registrationDate) {
         this.name = name;
         this.email = email;
@@ -38,6 +47,7 @@ public class User {
         this.registrationDate = registrationDate;
     }
 
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -84,5 +94,29 @@ public class User {
 
     public void setRegistrationDate(Timestamp registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    // Implementation of UserDetails methods
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Assuming userType represents the role, otherwise customize as needed
+        return Collections.singletonList(new SimpleGrantedAuthority(userType.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", userType=" + userType +
+                ", registrationDate=" + registrationDate +
+                '}';
     }
 }
