@@ -8,6 +8,7 @@ import com.metaphorce.cinemagic.enums.UserType;
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +23,7 @@ public class TicketTest {
         BigDecimal price = new BigDecimal("10.00");
         Timestamp purchaseDate = new Timestamp(System.currentTimeMillis());
 
-        Ticket ticket = new Ticket(id, purchaseDate, price, seat, schedule, user);
+        Ticket ticket = new Ticket(id, purchaseDate, price, seat, schedule, Optional.of(user));
 
         assertEquals(id, ticket.getId());
         assertEquals(user, ticket.getUser());
@@ -44,7 +45,7 @@ public class TicketTest {
         Timestamp newPurchaseDate = new Timestamp(System.currentTimeMillis());
 
         ticket.setId(newId);
-        ticket.setUser(newUser);
+        ticket.setUser(Optional.of(newUser));
         ticket.setSchedule(newSchedule);
         ticket.setSeat(newSeat);
         ticket.setPrice(newPrice);

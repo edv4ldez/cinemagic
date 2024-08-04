@@ -1,7 +1,11 @@
 package com.metaphorce.cinemagic.controllers;
 
 import com.metaphorce.cinemagic.entities.Rating;
+import com.metaphorce.cinemagic.entities.Ticket;
+import com.metaphorce.cinemagic.entities.User;
 import com.metaphorce.cinemagic.services.RatingService;
+import com.metaphorce.cinemagic.services.TicketService;
+import com.metaphorce.cinemagic.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,14 +18,22 @@ import java.util.Optional;
 public class RatingController {
 
     private final RatingService ratingService;
+    private final UserService userService;
 
     @Autowired
-    public RatingController(RatingService ratingService) {
+    public RatingController(RatingService ratingService, TicketService ticketService, UserService userService) {
         this.ratingService = ratingService;
+        this.userService = userService;
     }
 
     @PostMapping
     public ResponseEntity<Rating> createRating(@RequestBody Rating rating) {
+        Optional<User> foundUserOptional = userService.getUserById(rating.getUser().getId());
+        if (foundUserOptional.isEmpty()) {
+            return ResponseEntity.badRequest().build(); // Handle user not found scenario
+        }
+        User foundUser = foundUserOptional.get();
+        rating.setUser(foundUser);
         return ResponseEntity.ok(ratingService.createRating(rating));
     }
 
